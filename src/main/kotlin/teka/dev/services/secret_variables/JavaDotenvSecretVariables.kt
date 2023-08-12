@@ -1,6 +1,5 @@
 package teka.dev.services.secret_variables
 
-import teka.dev.dotenv
 
 class JavaDotenvSecretVariables: SecretVariables {
     override fun get(name: SecretVariableName): String? {

@@ -5,13 +5,15 @@ import io.ktor.server.application.*
 import io.ktor.server.engine.*
 import io.ktor.server.netty.*
 import teka.dev.plugins.*
+import teka.dev.services.secret_variables.SecretVariableName
+import teka.dev.services.secret_variables.SecretVariablesService
 
 val dotenv = dotenv {
     ignoreIfMissing = true
 }
 
 fun main() {
-    println("environment variable: ${dotenv["API_KEY"]}")
+    println("environment variable: ${SecretVariablesService.require(SecretVariableName.ServerPort).toInt()}")
     val appEnv = applicationEngineEnvironment {
         envConfig()
     }
@@ -28,8 +30,8 @@ fun ApplicationEngineEnvironmentBuilder.envConfig() {
         module()
     }
     connector {
-        host = "0.0.0.0"
-        port = 8080
+        host = SecretVariablesService.require(SecretVariableName.ServerHost)
+        port = SecretVariablesService.require(SecretVariableName.ServerPort).toInt()
     }
     developmentMode = true
 }
