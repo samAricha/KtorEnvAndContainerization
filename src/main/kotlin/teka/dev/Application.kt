@@ -6,16 +6,30 @@ import io.ktor.server.engine.*
 import io.ktor.server.netty.*
 import teka.dev.plugins.*
 
-fun main() {
-    val env = dotenv {
-        ignoreIfMissing = true
-    }
-    println("environment variable: ${env["API_KEY"]}")
-    embeddedServer(Netty, port = 8080, host = "0.0.0.0", module = Application::module)
-        .start(wait = true)
+val dotenv = dotenv {
+    ignoreIfMissing = true
 }
+
+fun main() {
+    println("environment variable: ${dotenv["API_KEY"]}")
+    val appEnv = applicationEngineEnvironment {
+        envConfig()
+    }
+    embeddedServer(Netty,appEnv).start(wait = true)
+}
+
 
 fun Application.module() {
     configureSerialization()
     configureRouting()
+}
+fun ApplicationEngineEnvironmentBuilder.envConfig() {
+    module {
+        module()
+    }
+    connector {
+        host = "0.0.0.0"
+        port = 8080
+    }
+    developmentMode = true
 }

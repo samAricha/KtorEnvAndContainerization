@@ -1,5 +1,5 @@
 package teka.dev.services.secret_variables
 
-enum class SecretVariableName(value: String) {
+enum class SecretVariableName(val value: String) {
     ServerPort("PORT")
 }
